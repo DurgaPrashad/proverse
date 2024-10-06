@@ -3,7 +3,10 @@ Proverse: Community Mapping System
 ![proverse](https://github.com/user-attachments/assets/0c5c3b7e-5da2-4910-a2bc-2f04a366bc03)
 
 Proverse is an advanced, GIS-powered community mapping platform that visualizes and addresses local issues, including traffic congestion, pollution, public services, and environmental conditions. The platform integrates multiple tools like GeoJSON data, voice recognition, weather APIs, and leaflet maps to create an interactive and insightful experience for decision-makers, planners, and local communities.
-![comunity mapping](https://github.com/user-attachments/assets/b9052fb7-a57e-4f5f-95e7-fc7b32969fb3)
+
+![IMG_2291](https://github.com/user-attachments/assets/b31e9272-2da9-417c-a567-deec90df878c)
+
+
 ![airpollution](https://github.com/user-attachments/assets/21d21285-dd91-45a6-8383-eda1d6c6eaf2)
 
 
@@ -18,7 +21,7 @@ Contributing
 License
 Links
 Features
-
+![comunity mapping](https://github.com/user-attachments/assets/b9052fb7-a57e-4f5f-95e7-fc7b32969fb3)
 1. Dynamic Map with Multiple Layers
 Leaflet.js-based dynamic maps with layers for Street View and Satellite View.
 Toggle between layers for issues like:
