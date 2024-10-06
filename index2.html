@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community Mapping System</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="qgisstyle.css" />
+    <style>
+        #map {
+            height: 600px;
+        }
+        #mini-map {
+            height: 200px;
+        }
+        #left-sidebar,
+        #right-sidebar {
+            width: 200px;
+            float: left;
+        }
+        /* From Uiverse.io by CristianMontoya98 */
+        .btn {
+            width: 15em;
+            height: 2.3em;
+            margin: 0.5em;
+            background: rgb(3, 156, 239);
+            color: white;
+            border: none;
+            border-radius: 0.625em;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        button:hover {
+            color: black;
+        }
+
+        button:after {
+            content: "";
+            background: white;
+            position: absolute;
+            z-index: -1;
+            left: -20%;
+            right: -20%;
+            top: 0;
+            bottom: 0;
+            transform: skewX(-45deg) scale(0, 1);
+            transition: all 0.5s;
+        }
+
+        button:hover:after {
+            transform: skewX(-45deg) scale(1, 1);
+            -webkit-transition: all 0.5s;
+            transition: all 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h3>Community Mapping System</h3>
+    </header>
+
+    <div id="content">
+        <div id="left-sidebar">
+            <h2>Geographical Data</h2>
+            <div id="search-container">
+                <input type="text" id="locationInput" placeholder="Enter a location" />
+                <button class="btn" onclick="goToLocation()">Search</button>
+            </div>
+            <div id="weatherResult">Loading temperature...</div>
+            <div id="mini-map"></div>
+        </div>
+
+        <div id="map"></div>
+
+        <div id="right-sidebar">
+            <h2>Controls</h2>
+            <div id="button-container">
+                <button class="btn" id="toggle-industrial" onclick="toggleIndustrialPollution()">
+                    Show Industrial Pollution
+                </button>
+                <button class="btn" id="toggle-traffic" onclick="toggleTrafficArea()">
+                    Show Traffic Area
+                </button>
+                <button class="btn" id="toggle-drainage" onclick="toggleDrainageProblem()">
+                    Show Drainage Problem
+                </button>
+                <p>Coming Soon</p>
+                <button class="btn" id="toggle-healthcare" onclick="toggleHealthcareServices()">
+                    Show Healthcare Services
+                </button>
+
+                <button class="btn" id="toggle-education" onclick="toggleEducationFacilities()">
+                    Show Education Facilities
+                </button>
+
+                <button class="btn" id="toggle-green-spaces" onclick="toggleGreenSpaces()">
+                    Show Green Spaces
+                </button>
+
+                <button class="btn" id="toggle-crime-rate" onclick="toggleCrimeRate()">
+                    Show Crime Rate Data
+                </button>
+
+                <button class="btn" id="toggle-public-transport" onclick="togglePublicTransport()">
+                    Show Public Transport
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Community Mapping Project</p>
+    </footer>
+
+    <script src="qgisscript.js"></script>
+</body>
+</html>

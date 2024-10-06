@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice-Controlled Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+        header, footer {
+            background-color: #f8f9fa;
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        #map {
+            flex: 1;
+            position: relative;
+        }
+        #controls {
+            display: flex;
+            justify-content: center;
+            margin: 1rem;
+        }
+        /* Advanced button styling */
+        .btn {
+            width: 6.5em;
+            height: 2.3em;
+            margin: 0.5em;
+            background: rgb(1, 183, 255);
+            color: rgb(247, 242, 242);
+            border: none;
+            border-radius: 0.625em;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;  
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            color: rgb(4, 155, 249);
+        }
+
+        .btn:after {
+            content: "";
+            background: white;
+            position: absolute;
+            z-index: -1;
+            left: -20%;
+            right: -20%;
+            top: 0;
+            bottom: 0;
+            transform: skewX(-45deg) scale(0, 1);
+            transition: all 0.5s;
+        }
+
+        .btn:hover:after {
+            transform: skewX(-45deg) scale(1, 1);
+            transition: all 0.5s;
+        }
+
+        #info-panel {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 1rem;
+            border-radius: 5px;
+            z-index: 1000;
+            top: 10px;
+            right: 10px;
+            width: 30%;
+            height: 80%;
+            overflow-y: auto;
+            box-sizing: border-box;
+            display: none;
+        }
+
+        #toggle-info-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Mobile view adjustments */
+        @media (max-width: 768px) {
+            #info-panel {
+                width: 100%;
+                height: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Community Mapping: Using GIS to Address</h1>
+    </header>
+    <div id="map"></div>
+    <div id="controls">
+        <button id="start-recognition" class="btn">MIC
+            <span id="mic-icon"></span>
+        </button>
+        <button id="toggle-info-button" class="btn">Show Info</button>
+    </div>
+    <div id="info-panel">
+        <div id="direction-info"></div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Voice Map Project</p>
+    </footer>
+    <script>
+        // Initialize map
+        const map = L.map('map').setView([51.505, -0.09], 13);
+        const baseLayers = {
+            "Street View": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'OpenStreetMap contributors' }).addTo(map),
+            "Satellite View": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'OpenTopoMap contributors' }),
+            "Vegetation": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'OpenTopoMap contributors' })
+        };
+        L.control.layers(baseLayers).addTo(map);
+
+        // Initialize routing machine
+        let control = L.Routing.control({
+            waypoints: [],
+            routeWhileDragging: true,
+            createMarker: function() { return null; } // Hide default markers
+        }).addTo(map);
+
+        // Speech recognition setup
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = true;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        // Element references
+        const startRecognitionButton = document.getElementById('start-recognition');
+        const micIcon = document.getElementById('mic-icon');
+        const directionInfoDiv = document.getElementById('direction-info');
+        const infoPanel = document.getElementById('info-panel');
+
+        // Control variables
+        let markers = [];
+        let originCoordinates = null;
+
+        // Event listener for voice recognition button
+        startRecognitionButton.addEventListener('click', () => {
+            if (recognition.recognizing) {
+                recognition.stop();
+                recognition.recognizing = false;
+                micIcon.style.backgroundColor = 'blue';
+            } else {
+                recognition.start();
+                recognition.recognizing = true;
+                micIcon.style.backgroundColor = 'red';
+            }
+        });
+
+        recognition.onresult = async (event) => {
+            const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+            console.log('Voice Command:', transcript);
+            await handleVoiceCommand(transcript);
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            micIcon.style.backgroundColor = 'blue';
+        };
+
+        // Geocode function
+        async function geocodePlace(place) {
+            try {
+                const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+                    params: { q: place, format: 'json', limit: 1 }
+                });
+                if (response.data.length > 0) {
+                    const { lat, lon } = response.data[0];
+                    return [parseFloat(lat), parseFloat(lon)];
+                }
+            } catch (error) {
+                console.error('Geocoding error:', error);
+            }
+            return null;
+        }
+
+        // Handle voice commands
+        async function handleVoiceCommand(command) {
+            if (command.includes('go to')) {
+                const place = command.replace('go to', '').trim();
+                if (place) {
+                    const coordinates = await geocodePlace(place);
+                    if (coordinates) {
+                        map.setView(coordinates, 13);
+                        speak(`Going to ${place}`);
+                    } else {
+                        speak('Place not found');
+                    }
+                }
+            } else if (command.includes('mark')) {
+                const place = command.replace('mark', '').trim();
+                if (place) {
+                    const coordinates = await geocodePlace(place);
+                    if (coordinates) {
+                        const marker = L.marker(coordinates).addTo(map).bindPopup(place).openPopup();
+                        markers.push(marker);
+                        speak(`Marked ${place}`);
+                    } else {
+                        speak('Place not found');
+                    }
+                }
+            } else if (command.includes('show current location')) {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const coordinates = [position.coords.latitude, position.coords.longitude];
+                        map.setView(coordinates, 13);
+                        L.marker(coordinates).addTo(map).bindPopup("You are here!").openPopup();
+                        speak('Showing current location');
+                    });
+                } else {
+                    speak('Geolocation not supported');
+                }
+            } else {
+                speak('Command not recognized');
+            }
+        }
+
+        // Speech synthesis function
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Toggle information panel visibility
+        document.getElementById('toggle-info-button').addEventListener('click', () => {
+            if (infoPanel.style.display === 'none' || !infoPanel.style.display) {
+                infoPanel.style.display = 'block';
+                document.getElementById('toggle-info-button').textContent = 'Hide Info';
+            } else {
+                infoPanel.style.display = 'none';
+                document.getElementById('toggle-info-button').textContent = 'Show Info';
+            }
+        });
+
+    </script>
+</body>
+</html>

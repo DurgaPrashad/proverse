@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROVERSE</title>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+   .report-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      
+    }
+
+    .report-card {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      width: 300px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .report-card h2 {
+      margin-bottom: 10px;
+    }
+    .home-content {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content:center;
+      align-items: center;
+    }
+
+    .home-content .social-media {
+      margin-top: 40px;
+    }
+
+    .btn {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        display: none;
+      }
+      .navbar.active {
+        display: block;
+      }
+    }
+    .logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo-img {
+  width: 50px; /* Adjust the size as needed */
+  height: 50px; /* Adjust the size as needed */
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px; /* Space between the logo and the text */
+}
+
+.logo-text {
+  font-size: 1.5em; /* Adjust the font size as needed */
+  color: #000; /* Adjust the color as needed */
+}
+
+
+
+.responsive-video {
+  width: 100%;
+  height: auto;
+}
+.responsive-video {
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 700px) {
+  .responsive-video {
+    max-width: 520px;
+    max-height: 440px;
+  }
+}
+.responsive-image {
+  width: 100%;
+  height: auto;
+}
+
+.curved-edges {
+  border-radius: 50%; /* Make the image circular */
+  width: 50%; /* Default size */
+  height: auto;
+  object-fit: cover; /* Ensures the image covers the entire area */
+}
+
+@media (max-width: 700px) {
+  .home-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home-image {
+    order: -1; /* Move the image to the top */
+  }
+
+  .home-content div {
+    text-align: center;
+  }
+
+  .curved-edges {
+    width: 80%; /* Adjust the value as needed for smaller screens */
+    height: auto;
+  }
+}
+
+@media (min-width: 800px) {
+  .curved-edges {
+    width: 100%; /* Adjust the value as needed to fit the screen */
+    height: auto;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="header">
+   <a href="#" class="logo">
+      <img src="images/2.png" alt="PROVERSE Logo" class="logo-img">
+      <span class="logo-text">PROVERSE</span>
+    </a>
+    <i class='bx bx-menu' id="menu-icon"></i>
+	  
+    <nav class="navbar">
+      <a href="#home" class="active">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#report">Features</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="home" id="home">
+    <div class="home-content">
+      <div class="home-image">
+         <img src="images/2.png" alt="PROVERSE" class="curved-edges">
+      </div>
+      <div>
+        <h3>Welcome to the</h3>
+        <h1>PROVERSE</h1>
+        <h3> Community<span>Mapping</span></h3>
+        <p>— Proverse: A GIS-Powered Platform for Visualizing Community Issues" "Unlocking Insights, Informing Solutions —</p>
+        <div class="social-media">
+          <a href="#"><i class='bx bxl-twitter'></i></a>
+          <a href="#"><i class='bx bxl-linkedin'></i></a>
+          <a href="#"><i class='bx bxl-github'></i></a>
+        </div>
+        <a href="#services" class="btn">Get Started</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+   <video class="responsive-video" controls>
+      <source src="video/proverse - Made with Clipchamp.mp4" type="video/mp4">
+     
+    </video>
+       
+     </div>
+     <div class="about-content">
+       <h2>About <span>proverse</span></h2>
+       <p>
+         Proverse is a  neat application of the use of Geographic Information Systems to analyze and present on a map that particular issue in a community: possibly access to public services, environmental issues, housing problems, or traffic patterns. The GIS technology assists its users in overlaying geographic data such as roads, population density, schools, parks on a map and studies their spatial relationships.
+       </p>
+       <a href="#" class="btn">Click Here For More</a>
+     </div>
+   </div>
+ </section>
+
+ <section class="services" id="services">
+   <h2><span>Services</span></h2>
+   <div class="services-container">
+       <div class="services-box">
+           <i class='bx bx-map'></i>
+           <h2>Community <span>Mapping Issues</span></h2>
+           <p>
+               Explore community mapping issues, allowing users to visualize and analyze local challenges and resources.
+           </p>
+           <a href="index2.html" class="btn">Explore</a>
+       </div>
+
+       <div class="services-box">
+           <i class='bx bx-voice'></i>
+           <h2>Voice <span>Enabled Mapping</span></h2>
+           <p>
+               Implement voice-enabled mapping systems that allow users to control and interact with maps using voice commands.
+           </p>
+           <a href="index 3.html" class="btn">Explore</a>
+       </div>
+
+       <div class="services-box">
+           <i class='bx bx-building'></i>
+           <h2>Individual <span>Mapping</span></h2>
+           <p>
+               Create individual mapping solutions that showcase essential locations like schools, colleges, hospitals, and grocery stores.
+           </p>
+           <a href="index 4.html" class="btn">Explore</a>
+       </div>
+   </div>
+</section>
+
+
+<div class="services" id="services">
+  <h2>Community mapping Services</h2>
+
+  <div class="services__wrapper">
+    <div class="services__card">
+      <img src="images/prototypes/1.png" alt="Project 1">
+      
+    </div>
+    
+    <div class="services__card">
+      <img src="images/prototypes/ve3gitaion.png" alt="Project 2">
+      
+    </div>
+    <div class="services__card">
+      <img src="images/prototypes/ne.jpg" alt="Project 3">
+      
+    </div>
+    <div class="services__card">
+      <img src="images/prototypes/drainage.jpg" alt="Project 4">
+      
+    </div>
+    <div class="services__card">
+      <img src="images/prototypes/location distance.jpg" alt="Project 5">
+      
+    </div>
+    <div class="services__card">
+      <img src="images/prototypes/airpollution.jpg" alt="Project 6">
+      
+    </div>
+<div class="services__card">
+      <img src="images/prototypes/drainage.jpg" alt="Project 6">
+      
+    </div><div class="services__card">
+      <img src="images/prototypes/ne.jpg" alt="Project 6">
+     
+    </div>
+<div class="services__card">
+      <img src="images/prototypes/location distance.jpg" alt="Project 6">
+      
+    </div>
+  </div>
+</div>
+	</section>
+
+  <section class="contact" id="contact">
+    <h2>Contact <span>Us</span></h2>
+    <form action="#">
+      <div class="input-box">
+        <input type="text" placeholder="Full Name">
+        <input type="Email" placeholder="Email Address">  
+      </div>
+      <div class="input-box">
+        <input type="number" placeholder="Mobile Number">
+        <input type="text" placeholder="Subject">  
+      </div>
+      <textarea cols="30" rows="10" placeholder="Your message"></textarea>
+      <input type="submit" value="Send Message" class="btn">
+    </form>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-text">
+      <p>&copy; 2024 PROVERSE | All rights reserved</p>
+    </div>
+    <div class="footer-icon">
+      <a href="#home">
+        <i class='bx bx-up-arrow-alt'></i>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+   // Function to open the image in a new tab
+   function openImage(url) {
+     window.open(url, '_blank');
+   }
+
+   // Add event listeners to "Click Here For More" buttons
+   document.querySelectorAll('.report-card .btn').forEach(button => {
+     button.addEventListener('click', () => {
+       openImage('images/example_image.png'); // Replace with relevant image link
+     });
+   });
+ </script>
+
+

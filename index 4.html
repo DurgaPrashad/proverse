@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Mapping System</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        header, footer {
+            background-color: #f8f9fa;
+            padding: 0.2rem;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        #content {
+            display: flex;
+            flex: 1;
+            justify-content: space-between;
+            padding: 0.5rem;
+        }
+        #left-sidebar, #right-sidebar {
+            width: 25%;
+            background-color: #f4f4f4;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+        #map {
+            width: 50%; 
+            height: 100%;
+            position: relative;
+        }
+        .option, .data-option {
+            cursor: pointer;
+            padding: 0.5rem;
+            background-color: #ddd;
+            margin: 0.5rem;
+            border-radius: 5px;
+            text-align: center;
+            width: 90%;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        #info-panel {
+            display: none;
+            margin-top: 1rem;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Community Mapping System</h1>
+    </header>
+
+    <div id="content">
+        <!-- Left Sidebar -->
+        <div id="left-sidebar">
+            <h3>Choose Option</h3>
+            <div class="option" onclick="showData()">Data</div>
+            <div class="option" onclick="showGraphComparison()">Graph Comparison</div>
+            <div class="option" onclick="showProblems()">Problems</div>
+        </div>
+
+        <!-- Map Section -->
+        <div id="map"></div>
+
+        <!-- Right Sidebar -->
+        <div id="right-sidebar">
+            <h3>Data Options</h3>
+            <button class="data-option" onclick="showGeoJSON('/geojson/colleges.geojson')">Show Colleges</button>
+            <button class="data-option" onclick="showGeoJSON('/geojson/drainage_problem.geojson')">Show Drainage Problems</button>
+            <button class="data-option" onclick="showGeoJSON('/geojson/land_pollution.geojson')">Show Land Pollution</button>
+            <button class="data-option" onclick="showGeoJSON('/geojson/traffic_area.geojson')">Show Traffic Areas</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Community Mapping Project</p>
+    </footer>
+
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([12.9716, 77.5946], 13); // Centered in Bangalore
+        const baseLayers = {
+            "Street View": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(map),
+            "Satellite View": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: '© OpenTopoMap contributors' })
+        };
+        L.control.layers(baseLayers).addTo(map);
+
+        let geoJsonLayer;  // Global variable to store the GeoJSON layer
+
+        // Function to load GeoJSON data
+        function showGeoJSON(geojsonFile) {
+            if (geoJsonLayer) {
+                map.removeLayer(geoJsonLayer);  // Remove any existing layers before adding a new one
+            }
+
+            axios.get(geojsonFile)
+                .then(response => {
+                    geoJsonLayer = L.geoJSON(response.data, {
+                        style: {
+                            color: "blue",
+                            weight: 2,
+                            fillColor: "lightblue",
+                            fillOpacity: 0.5
+                        }
+                    }).addTo(map);
+
+                    map.fitBounds(geoJsonLayer.getBounds());  // Adjust the map view to the geojson layer
+                })
+                .catch(error => {
+                    console.error("Error loading GeoJSON data:", error);
+                });
+        }
+
+        // Handle sidebar options
+        function showData() {
+            alert("You can view data from the right sidebar, such as Colleges, Drainage Problems, etc.");
+        }
+
+        function showGraphComparison() {
+            alert("Graph comparison will be available soon.");
+        }
+
+        function showProblems() {
+            alert("You can select specific problems to view on the map.");
+        }
+    </script>
+</body>
+</html>
