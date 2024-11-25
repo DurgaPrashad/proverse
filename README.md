@@ -51,6 +51,8 @@
 7. **Prototypes for Specific Use Cases**
    - Pre-built prototypes showcasing mapping data for vegetation, air quality, traffic flow, and community services (e.g., healthcare and education).
    - Custom icons used to highlight specific issues like drainage, pollution, and traffic.
+![Screenshot 2024-10-06 192128](https://github.com/user-attachments/assets/059daae9-7db1-4d88-b667-eef56179e90f)
+
 
 ## Technologies Used
 - **HTML5**, **CSS3**, **JavaScript**
